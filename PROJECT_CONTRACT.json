@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "metrics": {
+    "production_loc": 2335,
+    "production_files": 37,
+    "production_packages": 18,
+    "test_files": 25,
+    "production_functions": 200,
+    "decision_points": 316
+  },
+  "persistence": {
+    "module": "go.etcd.io/bbolt",
+    "entities": [
+      "Record",
+      "AuditEvent",
+      "Workflow",
+      "Attachment"
+    ],
+    "reopen_test": "TestPersistenceSurvivesReopen"
+  },
+  "workflows": [
+    {
+      "steps": [
+        "register record with manufacturer, model, reference, and amount",
+        "review record and capture reviewer note",
+        "publish reviewed result",
+        "archive published result"
+      ],
+      "test": "TestWorkflowCreateReviewArchive"
+    },
+    {
+      "steps": [
+        "search by manufacturer or reference",
+        "select the deterministic first match",
+        "update amount and increment version",
+        "review and publish updated result"
+      ],
+      "test": "TestWorkflowSearchUpdatePublish"
+    },
+    {
+      "steps": [
+        "parse CSV rows into import objects",
+        "validate each row and reject invalid inputs",
+        "persist accepted records and audit events",
+        "summarize counts and amounts for the operator"
+      ],
+      "test": "TestWorkflowImportReport"
+    }
+  ]
+}
